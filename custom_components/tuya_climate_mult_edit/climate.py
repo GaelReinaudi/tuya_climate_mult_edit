@@ -139,10 +139,6 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
 
         super().__init__(device, device_manager)
 
-        print(self)
-        print(device)
-        self.MULTIPLIER = 5
-
         # If both temperature values for celsius and fahrenheit are present,
         # use whatever the device is set to, with a fallback to celsius.
         prefered_temperature_unit = None
@@ -194,6 +190,13 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
             self._set_temperature = farhenheit_type
         elif celsius_type:
             self._set_temperature = celsius_type
+
+        self.MULTIPLIER = 1
+        LOGGER.warning("%s", self._set_temperature)
+        LOGGER.warning("%s", device)
+        LOGGER.warning("%s", device.name)
+        if self._set_temperature.max <= 35:
+            self.MULTIPLIER = 5
 
         # Get integer type data for the dpcode to set temperature, use
         # it to define min, max & step temperatures
