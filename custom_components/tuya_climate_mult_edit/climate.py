@@ -137,9 +137,11 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
         self._attr_supported_features = 0
         self.entity_description = description
 
-        self.MULTIPLIER = 5
-
         super().__init__(device, device_manager)
+
+        print(self)
+        print(device)
+        self.MULTIPLIER = 5
 
         # If both temperature values for celsius and fahrenheit are present,
         # use whatever the device is set to, with a fallback to celsius.
