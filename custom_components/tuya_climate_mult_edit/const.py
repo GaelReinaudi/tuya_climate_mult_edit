@@ -39,7 +39,7 @@ from homeassistant.const import (
     Platform,
 )
 
-DOMAIN = "tuya_climate_mult_edit"
+DOMAIN = "tuya_climate_mult_gael"
 LOGGER = logging.getLogger(__package__)
 
 CONF_AUTH_TYPE = "auth_type"
