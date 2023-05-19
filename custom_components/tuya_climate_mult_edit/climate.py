@@ -191,17 +191,14 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
         elif celsius_type:
             self._set_temperature = celsius_type
 
-        self.MULTIPLIER = 1
         LOGGER.warning("%s", self._set_temperature)
         LOGGER.warning("%s", device)
-        if device.name in ['Basement', 'Vestibule', 'Guest room']:
-            self.MULTIPLIER = 5
 
         # Get integer type data for the dpcode to set temperature, use
         # it to define min, max & step temperatures
         if self._set_temperature:
             self._attr_supported_features |= ClimateEntityFeature.TARGET_TEMPERATURE
-            self._attr_max_temp = self._set_temperature.max_scaled * self.MULTIPLIER
+            self._attr_max_temp = self._set_temperature.max_scaled * self.multiplier(device=device)
             self._attr_min_temp = self._set_temperature.min_scaled
             self._attr_target_temperature_step = self._set_temperature.step_scaled
 
@@ -265,6 +262,12 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
 
             if self.find_dpcode(DPCode.SWITCH_VERTICAL, prefer_function=True):
                 self._attr_swing_modes.append(SWING_VERTICAL)
+
+    def multiplier(self, device: TuyaDevice = None):
+        device = device or self.device
+        if device.name in ['Basement', 'Vestibule', 'Guest room']:
+            return 5.0
+        return 1.0
 
     async def async_added_to_hass(self) -> None:
         """Call when entity is added to hass."""
@@ -348,7 +351,7 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
                 {
                     "code": self._set_temperature.dpcode,
                     "value": round(
-                        self._set_temperature.scale_value_back(kwargs["temperature"] / self.MULTIPLIER)
+                        self._set_temperature.scale_value_back(kwargs["temperature"] / self.multiplier())
                     ),
                 }
             ]
@@ -371,7 +374,7 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
             # https://developer.tuya.com/en/docs/iot/shift-temperature-scale-follow-the-setting-of-app-account-center?id=Ka9qo7so58efq#title-7-Round%20values
             temperature = temperature / 10
 
-        return self._current_temperature.scale_value(temperature * self.MULTIPLIER)
+        return self._current_temperature.scale_value(temperature * self.multiplier())
 
     @property
     def current_humidity(self) -> int | None:
@@ -395,7 +398,7 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
         if temperature is None:
             return None
 
-        return self._set_temperature.scale_value(temperature * self.MULTIPLIER)
+        return self._set_temperature.scale_value(temperature * self.multiplier())
 
     @property
     def target_humidity(self) -> int | None:
