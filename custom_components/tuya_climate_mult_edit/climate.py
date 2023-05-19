@@ -194,8 +194,7 @@ class TuyaClimateEntity(TuyaEntity, ClimateEntity):
         self.MULTIPLIER = 1
         LOGGER.warning("%s", self._set_temperature)
         LOGGER.warning("%s", device)
-        LOGGER.warning("%s", device.name)
-        if self._set_temperature.max <= 35:
+        if device.name in ['Basement', 'Vestibule', 'Guest room']:
             self.MULTIPLIER = 5
 
         # Get integer type data for the dpcode to set temperature, use
