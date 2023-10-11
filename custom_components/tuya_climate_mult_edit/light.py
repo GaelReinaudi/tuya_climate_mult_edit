@@ -1,7 +1,7 @@
 """Support for the Tuya lights."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 from typing import Any, cast
 
@@ -51,7 +51,7 @@ DEFAULT_COLOR_TYPE_DATA_V2 = ColorTypeData(
 
 @dataclass
 class TuyaLightEntityDescription(LightEntityDescription):
-    """Describe an Tuya light entity."""
+    """Describe a Tuya light entity."""
 
     brightness_max: DPCode | None = None
     brightness_min: DPCode | None = None
@@ -59,7 +59,7 @@ class TuyaLightEntityDescription(LightEntityDescription):
     color_data: DPCode | tuple[DPCode, ...] | None = None
     color_mode: DPCode | None = None
     color_temp: DPCode | tuple[DPCode, ...] | None = None
-    default_color_type: ColorTypeData = DEFAULT_COLOR_TYPE_DATA
+    default_color_type: ColorTypeData = field(default_factory=lambda: DEFAULT_COLOR_TYPE_DATA)
 
 
 LIGHTS: dict[str, tuple[TuyaLightEntityDescription, ...]] = {
