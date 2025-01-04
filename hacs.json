@@ -1,5 +1,5 @@
 {
   "name": "Tuya Climate Multiplier Gael",
   "domains": ["tuya_climate_mult_gael"],
-  "render_readme": false,
+  "render_readme": true
 }
